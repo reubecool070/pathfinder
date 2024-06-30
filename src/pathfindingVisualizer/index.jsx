@@ -10,32 +10,78 @@ import {
   START_NODE_COLUMN,
   START_NODE_ROW,
 } from "../data/constant";
+import { djikstra, getShortestPathInOrder } from "../algorithm/dijkstra";
 
 const PathfindingVisualizer = () => {
-  const [nodes, setNodes] = useState([]);
+  const [grids, setGrids] = useState([]);
 
   useEffect(() => {
-    const temp = createInitialGrid();
-    setNodes(temp);
+    const _grids = createInitialGrid();
+    setGrids(_grids);
   }, []);
 
-  console.log({ nodes });
+  const animateAlgorithm = (visitedNodesInOrder, shortedPathInOrder) => {
+    for (let i = 0; i < visitedNodesInOrder.length; i++) {
+      if (i === visitedNodesInOrder.length - 1) {
+        setTimeout(() => {
+          animateShortestPath(shortedPathInOrder);
+        }, 10 * i);
+      }
+      setTimeout(() => {
+        const node = visitedNodesInOrder[i];
+        const element = document.getElementById(`node-${node.row}-${node.col}`);
+        if (element) {
+          element.className = "node visited";
+        }
+      }, 10 * i);
+    }
+  };
+
+  const animateShortestPath = (shortedPathInOrder) => {
+    for (let index = 0; index < shortedPathInOrder.length; index++) {
+      setTimeout(() => {
+        const node = shortedPathInOrder[index];
+        const element = document.getElementById(`node-${node.row}-${node.col}`);
+        if (element) {
+          element.className = "node shortest-path";
+        }
+      }, 50 * index);
+    }
+  };
+
+  const visualizeAlgorithm = () => {
+    const startNode = grids[START_NODE_ROW][START_NODE_COLUMN];
+    const finishNode = grids[FINISH_NODE_ROW][FINISH_NODE_COLUMN];
+    const visitedNodesInOrder = djikstra(grids, startNode, finishNode);
+
+    const shortedPathInOrder = getShortestPathInOrder(finishNode);
+
+    animateAlgorithm(visitedNodesInOrder, shortedPathInOrder);
+  };
+
   return (
-    <div className="grid">
-      {nodes.map((row, rowIdx) => {
-        return (
-          <div className="row" key={rowIdx}>
-            {row.map(({ isFinish, isStart }, nodeIdx) => (
-              <Node
-                key={`${rowIdx}-${nodeIdx}`}
-                isFinish={isFinish}
-                isStart={isStart}
-              />
-            ))}
-          </div>
-        );
-      })}
-    </div>
+    <>
+      <button onClick={() => visualizeAlgorithm()}>
+        Visualize Dijkstra Algorithm
+      </button>
+      <div className="grid">
+        {grids.map((row, rowIdx) => {
+          return (
+            <div className="row" key={rowIdx}>
+              {row.map(({ isFinish, isStart, row, col }, nodeIdx) => (
+                <Node
+                  key={`${rowIdx}-${nodeIdx}`}
+                  isFinish={isFinish}
+                  isStart={isStart}
+                  row={row}
+                  col={col}
+                />
+              ))}
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 };
 
