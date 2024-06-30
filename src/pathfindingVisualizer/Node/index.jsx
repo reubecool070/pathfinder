@@ -1,14 +1,12 @@
 import "./index.css";
 
-const Node = ({ isFinish, isStart }) => {
+// eslint-disable-next-line react/prop-types
+const Node = ({ isFinish, isStart, row, col }) => {
   const nodeClassName = isFinish ? "finish" : isStart ? "start" : "";
 
-  return <div className={`node ${nodeClassName}`}></div>;
+  return (
+    <div id={`node-${row}-${col}`} className={`node ${nodeClassName}`}></div>
+  );
 };
 
 export default Node;
-
-export const DEFAULT_NODE = {
-  row: 0,
-  col: 0,
-};
