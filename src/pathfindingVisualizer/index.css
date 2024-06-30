@@ -1,0 +1,16 @@
+.grid {
+    display: flex;
+    flex-direction: column;
+    /* Added to ensure rows are stacked vertically */
+    align-items: center;
+    justify-content: center;
+    padding: 16px 32px;
+
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
