@@ -5,13 +5,20 @@ import "./index.css";
 const Node = ({
   isFinish,
   isStart,
+  isWall,
   row,
   col,
   onMouseDown,
   onMouseUp,
   onMouseEnter,
 }) => {
-  const nodeClassName = isFinish ? "finish" : isStart ? "start" : "";
+  const nodeClassName = isFinish
+    ? "finish"
+    : isStart
+    ? "start"
+    : isWall
+    ? "wall"
+    : "";
 
   return (
     <div
@@ -27,6 +34,7 @@ const Node = ({
 export default Node;
 
 Node.propTypes = {
+  isWall: PropTypes.bool.isRequired,
   isFinish: PropTypes.bool.isRequired,
   isStart: PropTypes.bool.isRequired,
   row: PropTypes.number.isRequired,

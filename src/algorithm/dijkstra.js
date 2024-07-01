@@ -13,7 +13,7 @@ export const djikstra = (grid, startNode, finishNode) => {
     // extract the first node
     const closestNode = unvisitedNodes.shift();
     // If we encounter a wall, we skip it.
-    if (closestNode.wall) continue;
+    if (closestNode.isWall) continue;
     // Stops if the closest node's distance is infinity.
     if (closestNode.distance === Infinity) return visitedNodesInOrder;
     closestNode.isVisited = true;

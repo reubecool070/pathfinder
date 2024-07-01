@@ -13,6 +13,7 @@ import "./index.css";
 
 const PathfindingVisualizer = () => {
   const [grids, setGrids] = useState([]);
+  const [isMousePressed, setIsMousePressed] = useState(false);
 
   useEffect(() => {
     const _grids = createInitialGrid();
@@ -58,6 +59,26 @@ const PathfindingVisualizer = () => {
     animateAlgorithm(visitedNodesInOrder, shortedPathInOrder);
   };
 
+  const handleMouseDown = (row, col) => {
+    const _grids = grids.slice();
+    _grids[row][col].isWall = true;
+    setGrids(_grids);
+
+    setIsMousePressed(true);
+  };
+
+  const handleMouseEnter = (row, col) => {
+    if (!isMousePressed) return;
+
+    const _grids = grids.slice();
+    _grids[row][col].isWall = true;
+    setGrids(_grids);
+  };
+
+  const handleMouseUp = () => {
+    setIsMousePressed(false);
+  };
+
   return (
     <>
       <button onClick={() => visualizeAlgorithm()}>
@@ -67,13 +88,17 @@ const PathfindingVisualizer = () => {
         {grids.map((row, rowIdx) => {
           return (
             <div className="row" key={rowIdx}>
-              {row.map(({ isFinish, isStart, row, col }, nodeIdx) => (
+              {row.map(({ isFinish, isStart, row, col, isWall }, nodeIdx) => (
                 <Node
                   key={`${rowIdx}-${nodeIdx}`}
                   isFinish={isFinish}
                   isStart={isStart}
+                  isWall={isWall}
                   row={row}
                   col={col}
+                  onMouseDown={handleMouseDown}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseUp={handleMouseUp}
                 />
               ))}
             </div>
