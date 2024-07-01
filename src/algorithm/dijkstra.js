@@ -3,6 +3,9 @@
 // previous node, effectively allowing us to compute the shortest path
 // by backtracking from the finish node.
 export const djikstra = (grid, startNode, finishNode) => {
+  if (!grid.length || !startNode || !finishNode || startNode === finishNode)
+    return;
+
   const visitedNodesInOrder = [];
   startNode.distance = 0;
   const unvisitedNodes = getAllNodes(grid);
