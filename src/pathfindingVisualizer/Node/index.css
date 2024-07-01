@@ -10,7 +10,7 @@
 }
 
 .start {
-    background-color: #4793AF
+    background-color: #0F67B1
 }
 
 .visited {
@@ -64,16 +64,16 @@
 @keyframes shortestPath {
     0% {
         transform: scale(0.6);
-        background-color: #E9C46A;
+        background-color: #E76F51;
     }
 
     50% {
         transform: scale(1.2);
-        background-color: #E9C46A;
+        background-color: #E76F51;
     }
 
     100% {
         transform: scale(1);
-        background-color: #E9C46A;
+        background-color: #E76F51;
     }
 }

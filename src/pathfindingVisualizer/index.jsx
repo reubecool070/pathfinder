@@ -29,6 +29,7 @@ const PathfindingVisualizer = () => {
       }
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
+        if (node.isFinish || node.isStart) return;
         const element = document.getElementById(`node-${node.row}-${node.col}`);
         if (element) {
           element.className = "node visited";
@@ -41,6 +42,7 @@ const PathfindingVisualizer = () => {
     for (let index = 0; index < shortedPathInOrder.length; index++) {
       setTimeout(() => {
         const node = shortedPathInOrder[index];
+        if (node.isFinish || node.isStart) return;
         const element = document.getElementById(`node-${node.row}-${node.col}`);
         if (element) {
           element.className = "node shortest-path";
@@ -59,20 +61,24 @@ const PathfindingVisualizer = () => {
     animateAlgorithm(visitedNodesInOrder, shortedPathInOrder);
   };
 
-  const handleMouseDown = (row, col) => {
+  const updateGrids = (row, col) => {
+    if (row === START_NODE_ROW && col === START_NODE_COLUMN) return;
+    if (row === FINISH_NODE_ROW && col === FINISH_NODE_COLUMN) return;
+
     const _grids = grids.slice();
     _grids[row][col].isWall = true;
     setGrids(_grids);
+  };
 
+  const handleMouseDown = (row, col) => {
+    updateGrids(row, col);
     setIsMousePressed(true);
   };
 
   const handleMouseEnter = (row, col) => {
     if (!isMousePressed) return;
 
-    const _grids = grids.slice();
-    _grids[row][col].isWall = true;
-    setGrids(_grids);
+    updateGrids(row, col);
   };
 
   const handleMouseUp = () => {
