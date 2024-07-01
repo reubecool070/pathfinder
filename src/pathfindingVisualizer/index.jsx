@@ -1,7 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Node from "./Node";
-import { useEffect } from "react";
-import "./index.css";
 import {
   COLUMN_COUNT,
   FINISH_NODE_COLUMN,
@@ -11,6 +9,7 @@ import {
   START_NODE_ROW,
 } from "../data/constant";
 import { djikstra, getShortestPathInOrder } from "../algorithm/dijkstra";
+import "./index.css";
 
 const PathfindingVisualizer = () => {
   const [grids, setGrids] = useState([]);
