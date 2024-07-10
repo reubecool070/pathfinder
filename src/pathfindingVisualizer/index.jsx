@@ -10,6 +10,7 @@ import {
 } from "../data/constant";
 import { djikstra, getShortestPathInOrder } from "../algorithm/dijkstra";
 import "./index.css";
+import { astar } from "../algorithm/astar";
 
 const PathfindingVisualizer = () => {
   const [grids, setGrids] = useState([]);
@@ -51,13 +52,51 @@ const PathfindingVisualizer = () => {
     }
   };
 
-  const visualizeAlgorithm = () => {
+  const resetFunction = () => {
+    // console.log(temp);
+    const temp_grid = [];
+    for (let row = 0; row < ROW_COUNT; row++) {
+      const currentRow = [];
+      for (let col = 0; col < COLUMN_COUNT; col++) {
+        const node = grids[row][col];
+        const element = document.getElementById(`node-${row}-${col}`);
+        const temp = {
+          ...node,
+          isVisited: false,
+          distance: Infinity,
+          totalDistance: Infinity,
+          previousNode: null,
+        };
+        currentRow.push(temp);
+        if (element && !node.isWall && !node.isStart && !node.isFinish) {
+          element.className = "node";
+        }
+      }
+      temp_grid.push(currentRow);
+    }
+    setGrids(temp_grid);
+  };
+
+  const visualizeAlgorithm = (algoString) => {
     const startNode = grids[START_NODE_ROW][START_NODE_COLUMN];
     const finishNode = grids[FINISH_NODE_ROW][FINISH_NODE_COLUMN];
-    const visitedNodesInOrder = djikstra(grids, startNode, finishNode);
+    resetFunction();
+    let visitedNodesInOrder = [];
+
+    switch (algoString) {
+      case "djikstra":
+        visitedNodesInOrder = djikstra(grids, startNode, finishNode);
+        break;
+
+      case "astar":
+        visitedNodesInOrder = astar(grids, startNode, finishNode);
+        break;
+
+      default:
+        break;
+    }
 
     const shortedPathInOrder = getShortestPathInOrder(finishNode);
-
     animateAlgorithm(visitedNodesInOrder, shortedPathInOrder);
   };
 
@@ -87,26 +126,34 @@ const PathfindingVisualizer = () => {
 
   return (
     <>
-      <button onClick={() => visualizeAlgorithm()}>
-        Visualize Dijkstra Algorithm
-      </button>
+      <div className="grid row">
+        <button onClick={() => visualizeAlgorithm("djikstra")}>
+          Visualize Dijkstra Algorithm
+        </button>
+        <button onClick={() => visualizeAlgorithm("astar")}>
+          Visualize Astar Algorithm
+        </button>
+      </div>
       <div className="grid">
         {grids.map((row, rowIdx) => {
           return (
             <div className="row" key={rowIdx}>
-              {row.map(({ isFinish, isStart, row, col, isWall }, nodeIdx) => (
-                <Node
-                  key={`${rowIdx}-${nodeIdx}`}
-                  isFinish={isFinish}
-                  isStart={isStart}
-                  isWall={isWall}
-                  row={row}
-                  col={col}
-                  onMouseDown={handleMouseDown}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseUp={handleMouseUp}
-                />
-              ))}
+              {row.map(
+                ({ isFinish, isStart, row, col, isWall, name }, nodeIdx) => (
+                  <Node
+                    key={`${rowIdx}-${nodeIdx}`}
+                    isFinish={isFinish}
+                    isStart={isStart}
+                    isWall={isWall}
+                    row={row}
+                    col={col}
+                    onMouseDown={handleMouseDown}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseUp={handleMouseUp}
+                    name={name}
+                  />
+                )
+              )}
             </div>
           );
         })}
@@ -136,8 +183,10 @@ const createNode = (row, col) => {
     isStart: row === START_NODE_ROW && col === START_NODE_COLUMN,
     isFinish: row === FINISH_NODE_ROW && col === FINISH_NODE_COLUMN,
     distance: Infinity,
+    totalDistance: Infinity,
     isVisited: false,
     isWall: false,
     previousNode: null,
+    name: "node",
   };
 };

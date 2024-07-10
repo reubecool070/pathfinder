@@ -11,6 +11,7 @@ const Node = ({
   onMouseDown,
   onMouseUp,
   onMouseEnter,
+  name,
 }) => {
   const nodeClassName = isFinish
     ? "finish"
@@ -25,9 +26,9 @@ const Node = ({
       onMouseDown={() => onMouseDown(row, col)}
       onMouseUp={() => onMouseUp(row, col)}
       onMouseEnter={() => onMouseEnter(row, col)}
-      id={`node-${row}-${col}`}
-      className={`node ${nodeClassName}`}
-    ></div>
+      id={`${name}-${row}-${col}`}
+      className={`${name} ${nodeClassName}`}
+    />
   );
 };
 
@@ -42,4 +43,5 @@ Node.propTypes = {
   onMouseDown: PropTypes.func.isRequired,
   onMouseUp: PropTypes.func.isRequired,
   onMouseEnter: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
 };
